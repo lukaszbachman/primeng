@@ -13,6 +13,7 @@ import { BlockableUI } from 'primeng/api';
 import { Subject, Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
 import { ScrollingModule, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { NgScrollbarModule } from "ngx-scrollbar";
 
 @Injectable()
 export class TableService {
@@ -2270,14 +2271,16 @@ export class TableBody implements OnDestroy {
             </div>
         </ng-container>
         <ng-template #virtualScrollTemplate>
-            <cdk-virtual-scroll-viewport [itemSize]="dt.virtualRowHeight" [style.height]="dt.scrollHeight !== 'flex' ? scrollHeight : undefined"
-                    [minBufferPx]="dt.minBufferPx" [maxBufferPx]="dt.maxBufferPx" (scrolledIndexChange)="onScrollIndexChange($event)" class="p-datatable-virtual-scrollable-body">
-                <table #scrollTable [class]="dt.tableStyleClass" [ngStyle]="dt.tableStyle">
-                    <ng-container *ngTemplateOutlet="frozen ? dt.frozenColGroupTemplate||dt.colGroupTemplate : dt.colGroupTemplate; context {$implicit: columns}"></ng-container>
-                    <tbody class="p-datatable-tbody" [pTableBody]="columns" [pTableBodyTemplate]="frozen ? dt.frozenBodyTemplate||dt.bodyTemplate : dt.bodyTemplate" [frozen]="frozen"></tbody>
-                </table>
-                <div #scrollableAligner style="background-color:transparent" *ngIf="frozen"></div>
-            </cdk-virtual-scroll-viewport>
+            <ng-scrollbar [ngStyle]="{ height: dt.scrollHeight }">
+                <cdk-virtual-scroll-viewport scrollViewport [itemSize]="dt.virtualRowHeight" [style.height]="dt.scrollHeight !== 'flex' ? scrollHeight : undefined"
+                        [minBufferPx]="dt.minBufferPx" [maxBufferPx]="dt.maxBufferPx" (scrolledIndexChange)="onScrollIndexChange($event)" class="p-datatable-virtual-scrollable-body">
+                    <table #scrollTable [class]="dt.tableStyleClass" [ngStyle]="dt.tableStyle">
+                        <ng-container *ngTemplateOutlet="frozen ? dt.frozenColGroupTemplate||dt.colGroupTemplate : dt.colGroupTemplate; context {$implicit: columns}"></ng-container>
+                        <tbody class="p-datatable-tbody" [pTableBody]="columns" [pTableBodyTemplate]="frozen ? dt.frozenBodyTemplate||dt.bodyTemplate : dt.bodyTemplate" [frozen]="frozen"></tbody>
+                    </table>
+                    <div #scrollableAligner style="background-color:transparent" *ngIf="frozen"></div>
+                </cdk-virtual-scroll-viewport>
+            </ng-scrollbar>
         </ng-template>
         <div #scrollFooter class="p-datatable-scrollable-footer">
             <div #scrollFooterBox class="p-datatable-scrollable-footer-box">
@@ -3812,7 +3815,7 @@ export class ReorderableRow implements AfterViewInit {
 }
 
 @NgModule({
-    imports: [CommonModule,PaginatorModule,ScrollingModule],
+    imports: [CommonModule,PaginatorModule,ScrollingModule, NgScrollbarModule],
     exports: [Table,SharedModule,SortableColumn,SelectableRow,RowToggler,ContextMenuRow,ResizableColumn,ReorderableColumn,EditableColumn,CellEditor,SortIcon,TableRadioButton,TableCheckbox,TableHeaderCheckbox,ReorderableRowHandle,ReorderableRow,SelectableRowDblClick,EditableRow,InitEditableRow,SaveEditableRow,CancelEditableRow,ScrollingModule],
     declarations: [Table,SortableColumn,SelectableRow,RowToggler,ContextMenuRow,ResizableColumn,ReorderableColumn,EditableColumn,CellEditor,TableBody,ScrollableView,SortIcon,TableRadioButton,TableCheckbox,TableHeaderCheckbox,ReorderableRowHandle,ReorderableRow,SelectableRowDblClick,EditableRow,InitEditableRow,SaveEditableRow,CancelEditableRow]
 })
