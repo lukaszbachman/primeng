@@ -2490,6 +2490,10 @@ export class ScrollableView implements AfterViewInit,OnDestroy {
         }
     }
 
+    clearCache() {
+        // Nothing to do
+    }
+
     getPageCount() {
         let dataToRender = this.dt.filteredValue || this.dt.value;
         let dataLength = dataToRender ? dataToRender.length: 0;
